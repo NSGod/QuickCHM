@@ -50,7 +50,7 @@ static NSString * const MDCHMQuickLookBundleIdentifier = @"com.markdouma.qlgener
    This function's job is to create preview for designated file
    ----------------------------------------------------------------------------- */
 
-OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview, CFURLRef url, CFStringRef contentTypeUTI, CFDictionaryRef options)
+OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview, CFURLRef URL, CFStringRef contentTypeUTI, CFDictionaryRef options)
 {
 	xmlInitParser();
 	LIBXML_TEST_VERSION;
@@ -65,16 +65,20 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
 #endif
 	CHMDocument *doc = [[CHMDocument alloc] init];
 	
-	if ([doc readFromFile:[(NSURL *)url path] ofType:nil]) {
+	NSError *error = nil;
+	
+	if ([doc readFromURL:(NSURL *)URL ofType:(NSString *)contentTypeUTI error:&error]) {
 		NSURL *homeUrl = [doc currentLocation];
 		// Get the main page data
 		NSData *data = [doc urlData:homeUrl];	
 		// Parse and replace hyper link
-		NSMutableDictionary *props=[[[NSMutableDictionary alloc] init] autorelease];
+		NSMutableDictionary *props=[NSMutableDictionary dictionary];
 		CFDataRef newData = adaptPage(data, doc->_container, homeUrl, &props);
 		
 		QLPreviewRequestSetDataRepresentation(preview, newData, kUTTypeHTML, (CFDictionaryRef)props);
-    }
+		
+	}
+	
     [doc release];
 	[pool release];
 	

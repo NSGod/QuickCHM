@@ -91,8 +91,9 @@ static NSString * const MDCHMQuickLookBundleIdentifier = @"com.markdouma.qlgener
    This function's job is to create thumbnail for designated file as fast as possible
    ----------------------------------------------------------------------------- */
 
-OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thumbnail, CFURLRef url, CFStringRef contentTypeUTI, CFDictionaryRef options, CGSize maxSize)
+OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thumbnail, CFURLRef URL, CFStringRef contentTypeUTI, CFDictionaryRef options, CGSize maxSize)
 {
+	
 	xmlInitParser();
 	LIBXML_TEST_VERSION;
 	
@@ -102,7 +103,9 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
 	
     CHMDocument *doc = [[CHMDocument alloc] init];
 	
-	if ([doc readFromFile:[(NSURL *)url path] ofType:nil]) {
+	NSError *error = nil;
+	
+	if ([doc readFromURL:(NSURL *)URL ofType:(NSString *)contentTypeUTI error:&error]) {
 		// Read main page
 		NSData *mainPageData = [doc urlData:[doc currentLocation]];
 		
@@ -138,7 +141,8 @@ void elementDidStart(CoverContext *context, const xmlChar *name, const xmlChar *
 				// find src
 				atts ++ ;
 				NSURL *url;
-				NSString *imgPath = [NSString stringWithCString:(char *)*atts];
+				NSString *imgPath = [NSString stringWithUTF8String:(const char *)*atts];
+//				NSString *imgPath = [NSString stringWithCString:(char *)*atts];
 				if (**atts == '/') {
 					// absolute path
 					url = [CHMURLProtocol URLWithPath:imgPath inContainer:context->container];

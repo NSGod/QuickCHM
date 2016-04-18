@@ -51,18 +51,21 @@
 
 #pragma mark NSDocument
 
-
-- (bool)readFromFile:(NSString *)fileName ofType:(NSString *)docType {
-	DEBUG_OUTPUT( @"CHMDocument:readFromFile:%@", fileName );
+- (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)outError {
+	// in case they try to read *outError:
+	if (outError) *outError = nil;
 	
-    _container = [CHMContainer containerWithContentsOfFile:fileName];
-    if( !_container ) return NO;
-
+	DEBUG_OUTPUT( @"[%@ %@] url.path == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd),url.path);
+	
+	_container = [[CHMContainer alloc] initWithContentsOfFile:url.path];
+	if (_container == nil) return NO;
+	
 	[CHMURLProtocol registerContainer:_container];
     _tableOfContents = [[CHMTableOfContents alloc] initWithContainer:_container];
 
     return YES;
 }
+
 
 #pragma mark Accessors
 
