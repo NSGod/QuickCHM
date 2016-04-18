@@ -9,29 +9,19 @@
 /* Begin PBXBuildFile section */
 		121D2FAA0D05364E003EB4F4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 121D2FA80D05364E003EB4F4 /* Cocoa.framework */; };
 		123DB9CD0D07D322007FAFF3 /* LICENSE.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 123DB9CC0D07D322007FAFF3 /* LICENSE.rtf */; };
-		8D576314048677EA00EA77CD /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AA1909FFE8422F4C02AAC07 /* CoreFoundation.framework */; };
-		C86B05270671AA6E00DD9006 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C86B05260671AA6E00DD9006 /* CoreServices.framework */; };
 		C1C31AC61CBDA61B000F2B96 /* CHM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1C31ABB1CBDA0F6000F2B96 /* CHM.framework */; };
 		EAC235EC16419CA000A128C6 /* English.lproj in Resources */ = {isa = PBXBuildFile; fileRef = EAC235EB16419CA000A128C6 /* English.lproj */; };
 		EAC235F816419CDB00A128C6 /* GeneratePreviewForURL.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC235F016419CDB00A128C6 /* GeneratePreviewForURL.m */; };
 		EAC235F916419CDB00A128C6 /* GenerateThumbnailForURL.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC235F116419CDB00A128C6 /* GenerateThumbnailForURL.m */; };
-		EAC235FC16419CDB00A128C6 /* QuickChmPageAdaptor.h in Headers */ = {isa = PBXBuildFile; fileRef = EAC235F416419CDB00A128C6 /* QuickChmPageAdaptor.h */; };
 		EAC235FD16419CDB00A128C6 /* QuickChmPageAdaptor.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC235F516419CDB00A128C6 /* QuickChmPageAdaptor.m */; };
 		EAC235FE16419CDB00A128C6 /* StringUtil.c in Sources */ = {isa = PBXBuildFile; fileRef = EAC235F616419CDB00A128C6 /* StringUtil.c */; };
-		EAC235FF16419CDB00A128C6 /* StringUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = EAC235F716419CDB00A128C6 /* StringUtil.h */; };
 		EAC2360116419CF600A128C6 /* README in Resources */ = {isa = PBXBuildFile; fileRef = EAC2360016419CF600A128C6 /* README */; };
-		EAC2363816419D1D00A128C6 /* CHMContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = EAC2362A16419D1D00A128C6 /* CHMContainer.h */; };
 		EAC2363916419D1D00A128C6 /* CHMContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC2362B16419D1D00A128C6 /* CHMContainer.m */; };
-		EAC2363A16419D1D00A128C6 /* CHMDocument.h in Headers */ = {isa = PBXBuildFile; fileRef = EAC2362C16419D1D00A128C6 /* CHMDocument.h */; };
 		EAC2363B16419D1D00A128C6 /* CHMDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC2362D16419D1D00A128C6 /* CHMDocument.m */; };
-		EAC2363C16419D1D00A128C6 /* CHMTableOfContents.h in Headers */ = {isa = PBXBuildFile; fileRef = EAC2362E16419D1D00A128C6 /* CHMTableOfContents.h */; };
 		EAC2363D16419D1D00A128C6 /* CHMTableOfContents.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC2362F16419D1D00A128C6 /* CHMTableOfContents.m */; };
-		EAC2363E16419D1D00A128C6 /* CHMTopic.h in Headers */ = {isa = PBXBuildFile; fileRef = EAC2363016419D1D00A128C6 /* CHMTopic.h */; };
 		EAC2363F16419D1D00A128C6 /* CHMTopic.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC2363116419D1D00A128C6 /* CHMTopic.m */; };
-		EAC2364016419D1D00A128C6 /* CHMURLProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = EAC2363216419D1D00A128C6 /* CHMURLProtocol.h */; };
 		EAC2364116419D1D00A128C6 /* CHMURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC2363316419D1D00A128C6 /* CHMURLProtocol.m */; };
 		EAC2364416419D7E00A128C6 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = EAC2364216419D7E00A128C6 /* main.c */; };
-		EAC2364516419D7E00A128C6 /* prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = EAC2364316419D7E00A128C6 /* prefix.pch */; };
 		F28CFBFD0A3EC0AF000ABFF5 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F28CFBFC0A3EC0AF000ABFF5 /* ApplicationServices.framework */; };
 		F28CFC030A3EC0C6000ABFF5 /* QuickLook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F28CFC020A3EC0C6000ABFF5 /* QuickLook.framework */; };
 /* End PBXBuildFile section */
@@ -82,13 +72,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0AA1909FFE8422F4C02AAC07 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
-		121D2FA80D05364E003EB4F4 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		0AA1909FFE8422F4C02AAC07 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		121D2FA80D05364E003EB4F4 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		123DB9CC0D07D322007FAFF3 /* LICENSE.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = LICENSE.rtf; sourceTree = "<group>"; };
 		8D576316048677EA00EA77CD /* CHM.qlgenerator */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CHM.qlgenerator; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D576317048677EA00EA77CD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		C86B05260671AA6E00DD9006 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
+		C149A4341CC003E400AABFF3 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		C149A4351CC003E400AABFF3 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		C149A4361CC003E400AABFF3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C1C31AB21CBDA0F6000F2B96 /* CHM Framework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "CHM Framework.xcodeproj"; path = "../../../chmlib/osx/CHMFramework/CHM Framework.xcodeproj"; sourceTree = "<group>"; };
+		C86B05260671AA6E00DD9006 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		EAC235EB16419CA000A128C6 /* English.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = English.lproj; path = rsrc/English.lproj; sourceTree = "<group>"; };
 		EAC235F016419CDB00A128C6 /* GeneratePreviewForURL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratePreviewForURL.m; sourceTree = "<group>"; };
 		EAC235F116419CDB00A128C6 /* GenerateThumbnailForURL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenerateThumbnailForURL.m; sourceTree = "<group>"; };
@@ -109,8 +102,8 @@
 		EAC2363316419D1D00A128C6 /* CHMURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMURLProtocol.m; sourceTree = "<group>"; };
 		EAC2364216419D7E00A128C6 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = SOURCE_ROOT; };
 		EAC2364316419D7E00A128C6 /* prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prefix.pch; sourceTree = SOURCE_ROOT; };
-		F28CFBFC0A3EC0AF000ABFF5 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = /System/Library/Frameworks/ApplicationServices.framework; sourceTree = "<absolute>"; };
-		F28CFC020A3EC0C6000ABFF5 /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = /System/Library/Frameworks/QuickLook.framework; sourceTree = "<absolute>"; };
+		F28CFBFC0A3EC0AF000ABFF5 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
+		F28CFC020A3EC0C6000ABFF5 /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,11 +111,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D576314048677EA00EA77CD /* CoreFoundation.framework in Frameworks */,
-				C86B05270671AA6E00DD9006 /* CoreServices.framework in Frameworks */,
-				F28CFC030A3EC0C6000ABFF5 /* QuickLook.framework in Frameworks */,
-				121D2FAA0D05364E003EB4F4 /* Cocoa.framework in Frameworks */,
 				F28CFBFD0A3EC0AF000ABFF5 /* ApplicationServices.framework in Frameworks */,
+				121D2FAA0D05364E003EB4F4 /* Cocoa.framework in Frameworks */,
+				F28CFC030A3EC0C6000ABFF5 /* QuickLook.framework in Frameworks */,
 				C1C31AC61CBDA61B000F2B96 /* CHM.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -137,6 +128,7 @@
 				089C167CFE841241C02AAC07 /* Resources */,
 				EAC2362316419D1D00A128C6 /* External Libraries */,
 				089C1671FE841209C02AAC07 /* External Frameworks */,
+				C149A43E1CC003F100AABFF3 /* Other Frameworks */,
 				19C28FB6FE9D52B211CA2CBB /* Products */,
 			);
 			name = quickchm;
@@ -173,6 +165,16 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		C149A43E1CC003F100AABFF3 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C149A4341CC003E400AABFF3 /* AppKit.framework */,
+				C149A4351CC003E400AABFF3 /* CoreData.framework */,
+				C149A4361CC003E400AABFF3 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
 		C1C31AB31CBDA0F6000F2B96 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -194,8 +196,8 @@
 				EAC235F116419CDB00A128C6 /* GenerateThumbnailForURL.m */,
 				EAC235F416419CDB00A128C6 /* QuickChmPageAdaptor.h */,
 				EAC235F516419CDB00A128C6 /* QuickChmPageAdaptor.m */,
-				EAC235F616419CDB00A128C6 /* StringUtil.c */,
 				EAC235F716419CDB00A128C6 /* StringUtil.h */,
+				EAC235F616419CDB00A128C6 /* StringUtil.c */,
 			);
 			name = Sources;
 			path = src;
@@ -238,34 +240,14 @@
 		};
 /* End PBXGroup section */
 
-/* Begin PBXHeadersBuildPhase section */
-		8D57630E048677EA00EA77CD /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				EAC235FC16419CDB00A128C6 /* QuickChmPageAdaptor.h in Headers */,
-				EAC235FF16419CDB00A128C6 /* StringUtil.h in Headers */,
-				EAC2363816419D1D00A128C6 /* CHMContainer.h in Headers */,
-				EAC2363A16419D1D00A128C6 /* CHMDocument.h in Headers */,
-				EAC2363C16419D1D00A128C6 /* CHMTableOfContents.h in Headers */,
-				EAC2363E16419D1D00A128C6 /* CHMTopic.h in Headers */,
-				EAC2364016419D1D00A128C6 /* CHMURLProtocol.h in Headers */,
-				EAC2364516419D7E00A128C6 /* prefix.pch in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXHeadersBuildPhase section */
-
 /* Begin PBXNativeTarget section */
 		8D57630D048677EA00EA77CD /* CHM.qlgenerator */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2CA3261E0896AD4900168862 /* Build configuration list for PBXNativeTarget "CHM.qlgenerator" */;
 			buildPhases = (
-				8D57630E048677EA00EA77CD /* Headers */,
 				8D57630F048677EA00EA77CD /* Resources */,
 				8D576311048677EA00EA77CD /* Sources */,
 				8D576313048677EA00EA77CD /* Frameworks */,
-				8D576315048677EA00EA77CD /* Rez */,
 				121D2FCF0D0539D6003EB4F4 /* ShellScript */,
 			);
 			buildRules = (
@@ -360,16 +342,6 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXRezBuildPhase section */
-		8D576315048677EA00EA77CD /* Rez */ = {
-			isa = PBXRezBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXRezBuildPhase section */
-
 /* Begin PBXShellScriptBuildPhase section */
 		121D2FCF0D0539D6003EB4F4 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -418,26 +390,17 @@
 		2CA3261F0896AD4900168862 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
-				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					CHM_USE_PREAD,
 					CHM_MT,
 				);
-				GENERATE_PKGINFO_FILE = YES;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = /Library/QuickLook;
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../../../../../Frameworks/ @loader_path/../../../";
 				OTHER_CFLAGS = "-DDEBUG_MODE";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
@@ -445,7 +408,6 @@
 					"-lxml2",
 					"-lcrypto",
 				);
-				VALID_ARCHS = x86_64;
 				PRODUCT_NAME = CHM;
 				WRAPPER_EXTENSION = qlgenerator;
 			};
@@ -454,20 +416,12 @@
 		2CA326200896AD4900168862 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				COMBINE_HIDPI_IMAGES = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
-				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = prefix.pch;
-				GENERATE_PKGINFO_FILE = NO;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = /Library/QuickLook;
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../../../../../Frameworks/";
 				OTHER_CFLAGS = "";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
@@ -475,7 +429,6 @@
 					"-lxml2",
 					"-lcrypto",
 				);
-				VALID_ARCHS = x86_64;
 				PRODUCT_NAME = CHM;
 				WRAPPER_EXTENSION = qlgenerator;
 			};
@@ -484,7 +437,7 @@
 		2CA326230896AD4900168862 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
 				CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND = YES;
 				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
@@ -494,8 +447,10 @@
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					CHM_USE_PREAD,
 					CHM_MT,
@@ -512,7 +467,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNKNOWN_PRAGMAS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/include/libxml2/**";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-lxml2",
@@ -520,14 +475,15 @@
 				);
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = macosx;
-				VALID_ARCHS = x86_64;
+				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_STYLE = "non-global";
 			};
 			name = Debug;
 		};
 		2CA326240896AD4900168862 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
 				CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND = YES;
 				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
@@ -537,9 +493,10 @@
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEPLOYMENT_POSTPROCESSING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					__universal__,
 					CHM_USE_PREAD,
@@ -557,10 +514,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNKNOWN_PRAGMAS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				ONLY_ACTIVE_ARCH = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = macosx;
-				VALID_ARCHS = x86_64;
+				STRIP_STYLE = "non-global";
 			};
 			name = Release;
 		};
