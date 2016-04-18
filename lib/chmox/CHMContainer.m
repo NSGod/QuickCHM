@@ -23,7 +23,7 @@
 #include <stdint.h>
 
 #import "CHMContainer.h"
-#import "chm_lib.h"
+#import <CHM/CHM.h>
 
 @implementation CHMContainer
 
