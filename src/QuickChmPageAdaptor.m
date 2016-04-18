@@ -195,7 +195,7 @@ CFDataRef adaptPage(NSData *page, CHMContainer *container, NSURL *pageUrl, NSMut
 	const char *hrefProtocol = "file://quickchm.href/";	
 	const char *imgProtocol = "file://quickchm.img/";	
 	
-	NSString *containerId = [container uniqueId];
+	NSString *containerId = [container uniqueID];
 	const char *uid = [containerId UTF8String];;
 	
 	// create host path

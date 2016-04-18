@@ -25,7 +25,7 @@ struct chmFile;
 
 @interface CHMContainer : NSObject {
     struct chmFile *_handle;
-    NSString *_uniqueId;
+    NSString			*uniqueID;
     
     NSString *_path;
     NSString *_title;    
@@ -48,8 +48,8 @@ struct chmFile;
 - (NSString *)findHomeForPath: (NSString *)basePath;
 
 - (NSString *)title;
-- (NSString *)uniqueId;
 - (NSString *)tocPath;
+- (NSString *)uniqueID;
 - (NSString *)homePath;
 
 - (NSData *)urlData:(NSURL *)url;

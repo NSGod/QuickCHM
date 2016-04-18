@@ -81,9 +81,9 @@
     return _tableOfContents;
 }
 
-- (NSString *)uniqueId
+- (NSString *)uniqueID
 {
-    return [_container uniqueId];
+    return [_container uniqueID];
 }
 
 - (NSData *)urlData:(NSURL *)url {

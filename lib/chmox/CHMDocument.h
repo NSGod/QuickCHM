@@ -37,7 +37,7 @@
 - (NSString *)title;
 - (NSURL *)currentLocation;
 - (CHMTableOfContents *)tableOfContents;
-- (NSString *)uniqueId;
 - (NSData *)urlData:(NSURL *)url;
+- (NSString *)uniqueID;
 
 @end

@@ -37,7 +37,7 @@ static NSMutableDictionary *containerReg = nil;
 
 + (NSURL *)URLWithPath:(NSString *)path inContainer:(CHMContainer *)container
 {
-    NSURL *baseURL = [NSURL URLWithString:[NSString stringWithFormat:@"quickchm://%@/", [container uniqueId]]];
+    NSURL *baseURL = [NSURL URLWithString:[NSString stringWithFormat:@"quickchm://%@/", [container uniqueID]]];
     NSURL *url = [NSURL URLWithString:path relativeToURL:baseURL];
     
     if( baseURL && url == nil ) {
@@ -124,7 +124,7 @@ static NSMutableDictionary *containerReg = nil;
 {
 	if (!containerReg)
 		containerReg = [[NSMutableDictionary alloc] initWithCapacity:1];
-	NSString *key = [container uniqueId];
+	NSString *key = [container uniqueID];
 	[containerReg setObject:container forKey:key];
 	DEBUG_OUTPUT([NSString stringWithFormat:@"Container %@ registered", key]); 
 }
@@ -133,7 +133,7 @@ static NSMutableDictionary *containerReg = nil;
 {
 	if (!containerReg)
 		containerReg = [[NSMutableDictionary alloc] init];
-	NSString *key = [container uniqueId];
+	NSString *key = [container uniqueID];
 	[containerReg removeObjectForKey:key];
 	DEBUG_OUTPUT([NSString stringWithFormat:@"Container %@ deregistered", key]);
 }	

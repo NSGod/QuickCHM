@@ -19,11 +19,11 @@
 // $Revision: 1.8 $
 //
 
-#include <openssl/sha.h>
 #include <stdint.h>
 
 #import "CHMContainer.h"
 #import <CHM/CHM.h>
+#import <CommonCrypto/CommonDigest.h>
 
 @implementation CHMContainer
 
@@ -45,7 +45,6 @@
 	
 	_path = [chmFilePath retain];
 	
-	_uniqueId = nil;
 	_title = nil;
 	_homePath = nil;
 	_tocPath = nil;
@@ -67,11 +66,11 @@
         chm_close( _handle );
     }
 
-    [_uniqueId release];
     [_title release];
     [_homePath release];
     [_tocPath release];
     [_indexPath release];
+    [uniqueID release];
     [super dealloc];
 }
 
@@ -88,9 +87,9 @@
     return _title;
 }
 
-- (NSString *)uniqueId 
+- (NSString *)uniqueID 
 {
-    return _uniqueId;
+    return uniqueID;
 }
 
 - (NSString *)tocPath
@@ -297,11 +296,20 @@ static inline NSString * readTrimmedString( NSData *data, unsigned long offset )
     }
 
     //--- Compute unique id ---
-    unsigned char digest[ SHA_DIGEST_LENGTH ];
-    SHA1( [systemData bytes], [systemData length], digest );
-    unsigned int *ptr = (unsigned int *) digest;
-    _uniqueId = [[NSString alloc] initWithFormat:@"%x%x%x%x%x", ptr[0], ptr[1], ptr[2], ptr[3], ptr[4]];
-    DEBUG_OUTPUT( @"UniqueId=%@", _uniqueId );
+	unsigned char digest[CC_SHA1_DIGEST_LENGTH];
+	char finalDigest[(2 * CC_SHA1_DIGEST_LENGTH) + 1];
+	
+	CC_SHA1([systemData bytes], systemData.length, digest);
+	
+	NSUInteger i = 0;
+	
+	for (i = 0; i < CC_SHA1_DIGEST_LENGTH; i++) {
+		sprintf(finalDigest + (i * 2), "%02x", digest[i]);
+	}
+	finalDigest[i * 2] = 0;
+	
+	uniqueID = [[NSString alloc] initWithUTF8String:finalDigest];
+    DEBUG_OUTPUT( @"UniqueId=%@", uniqueID );
 
     // Check for empty string titles
     if( [_title length] == 0 )  {
