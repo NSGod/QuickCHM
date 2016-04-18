@@ -70,6 +70,20 @@ NULL,
 NULL
 };
 
+OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thumbnail, CFURLRef url, CFStringRef contentTypeUTI, CFDictionaryRef options, CGSize maxSize);
+void CancelThumbnailGeneration(void* thisInterface, QLThumbnailRequestRef thumbnail);
+
+
+#define MD_DEBUG 1
+
+#if MD_DEBUG
+static NSString * const MDCHMQuickLookBundleIdentifier = @"com.markdouma.qlgenerator.CHM";
+#define MDLog(...) NSLog(__VA_ARGS__)
+#else
+#define MDLog(...)
+#endif
+
+
 
 /* -----------------------------------------------------------------------------
     Generate a thumbnail for file
@@ -83,6 +97,9 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
 	LIBXML_TEST_VERSION;
 	
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+	
+	MDLog(@"%@; %s(): file == \"%@\")", MDCHMQuickLookBundleIdentifier, __FUNCTION__, [(NSURL *)URL path]);
+	
     CHMDocument *doc = [[CHMDocument alloc] init];
 	
 	if ([doc readFromFile:[(NSURL *)url path] ofType:nil]) {

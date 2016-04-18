@@ -29,6 +29,19 @@
 #import "CHMTopic.h"
 #import "QuickChmPageAdaptor.h"
 
+OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview, CFURLRef url, CFStringRef contentTypeUTI, CFDictionaryRef options);
+void CancelPreviewGeneration(void* thisInterface, QLPreviewRequestRef preview);
+
+
+#define MD_DEBUG 1
+
+#if MD_DEBUG
+static NSString * const MDCHMQuickLookBundleIdentifier = @"com.markdouma.qlgenerator.CHM";
+#define MDLog(...) NSLog(__VA_ARGS__)
+#else
+#define MDLog(...)
+#endif
+
 #pragma mark Generate preview
 
 /* -----------------------------------------------------------------------------
@@ -41,13 +54,15 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
 {
 	xmlInitParser();
 	LIBXML_TEST_VERSION;
+    
+	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+	
+	MDLog(@"%@; %s(): file == \"%@\")", MDCHMQuickLookBundleIdentifier, __FUNCTION__, [(NSURL *)URL path]);
 	
 #if DEBUG_MODE
 	BOOL success = [NSURLProtocol registerClass:[CHMURLProtocol class]];
-	DEBUG_OUTPUT([NSString stringWithFormat:@"NSURLProtocol registration %@", success ? @"SUCCESS" : @"FAIL"]);
+	DEBUG_OUTPUT(@"NSURLProtocol registration %@", success ? @"SUCCESS" : @"FAIL");
 #endif
-    
-	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	CHMDocument *doc = [[CHMDocument alloc] init];
 	
 	if ([doc readFromFile:[(NSURL *)url path] ofType:nil]) {

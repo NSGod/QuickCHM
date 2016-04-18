@@ -12,6 +12,7 @@
 
 #import "QuickChmPageAdaptor.h"
 
+
 typedef struct {
 	const char *hrefHostPath;
 	const char *hrefRelativePath;
@@ -97,7 +98,8 @@ static void processHrefNode(xmlNode * cur_node, const char *hrefHostPath, const 
 		strncat(script, newUrl, len);
 		strncat(script, "'", len);
 		script[len-1] = 0;
-		DEBUG_OUTPUT([NSString stringWithFormat:@"%@%@%@%@", @"QuickChm Adaptor : Change ", [NSString stringWithCString:url], @" to ", [NSString stringWithCString:script]]);
+		
+		DEBUG_OUTPUT(@"QuickChm Adaptor : Change %s to %s", url, script);
 		
 		// create javascript attribute
 		xmlNewProp(cur_node, ONCLICK, (xmlChar *)script);
@@ -122,7 +124,7 @@ static void processImgNodeToUrl(xmlNode * cur_node, const char *imgHostPath, con
 	char *newSrc = (*src == '/') ? 
 		concateString(imgHostPath, src) : concateString(imgRelativePath, src);
 	
-	DEBUG_OUTPUT([NSString stringWithFormat:@"%@%@%@%@", @"QuickChm Adaptor : Change ", [NSString stringWithCString:src], @" to ", [NSString stringWithCString:newSrc]]);
+	DEBUG_OUTPUT(@"QuickChm Adaptor : Change %s to %s", src, newSrc);
 	
 	xmlSetProp(cur_node, SRC, (xmlChar *)newSrc);
 	
@@ -160,7 +162,7 @@ static void processImgNodeToDict(xmlNode * cur_node, NSURL *baseUrl, NSString *p
 	// finally, update the src attr
 	char *newSrc = concateString("cid:", [imgSrc UTF8String]);
 	
-	DEBUG_OUTPUT([NSString stringWithFormat:@"%@%@%@%@", @"QuickChm Adaptor : Change ", [NSString stringWithCString:src], @" to ", [NSString stringWithCString:newSrc]]);
+	DEBUG_OUTPUT(@"QuickChm Adaptor : Change %s to %s", src, newSrc);
 	
 	xmlSetProp(cur_node, SRC, (xmlChar *)newSrc);
 	
@@ -185,11 +187,22 @@ static void replaceHref(xmlNode * a_node, ProcessContext *context)
     }
 }
 
+#ifdef DEBUG_MODE
+static NSString * MDDesktopDebugFolderPath = nil;
+#endif
 
 CFDataRef adaptPage(NSData *page, CHMContainer *container, NSURL *pageUrl, NSMutableDictionary **dict)
-{
+{	
 #ifdef DEBUG_MODE
-	[page writeToFile:@"/origin.htm" atomically:YES];	
+	if (MDDesktopDebugFolderPath == nil) MDDesktopDebugFolderPath = [[@"~/Desktop/chmDebug" stringByExpandingTildeInPath] retain];
+	
+	if (![[NSFileManager defaultManager] createDirectoryAtPath:MDDesktopDebugFolderPath withIntermediateDirectories:YES attributes:nil error:NULL]) {
+		
+	}
+	
+	if (![page writeToFile:[MDDesktopDebugFolderPath stringByAppendingPathComponent:@"origin.html"] atomically:YES]) {
+		NSLog(@"failed to write to %@!", [MDDesktopDebugFolderPath stringByAppendingPathComponent:@"origin.html"]);
+	}
 #endif
 	
 	const char *hrefProtocol = "file://quickchm.href/";	
@@ -224,7 +237,9 @@ CFDataRef adaptPage(NSData *page, CHMContainer *container, NSURL *pageUrl, NSMut
 	xmlChar *tempmem;
 	int tempsize;
 	htmlDocDumpMemory(doc, &tempmem, &tempsize);
-	[[NSData dataWithBytes:tempmem length:tempsize] writeToFile:@"/origin2.htm" atomically:YES];
+	if (![[NSData dataWithBytes:tempmem length:tempsize] writeToFile:[MDDesktopDebugFolderPath stringByAppendingPathComponent:@"origin2.html"] atomically:YES]) {
+		NSLog(@"failed to write to %@!", [MDDesktopDebugFolderPath stringByAppendingPathComponent:@"origin2.html"]);
+	}
 	free(tempmem);
 #endif
 	
@@ -252,7 +267,9 @@ CFDataRef adaptPage(NSData *page, CHMContainer *container, NSURL *pageUrl, NSMut
 	NSData * newData = [NSData dataWithBytes:mem length:size];
 	
 #ifdef DEBUG_MODE
-	[newData writeToFile:@"/convert.htm" atomically:YES];
+	if (![newData writeToFile:[MDDesktopDebugFolderPath stringByAppendingPathComponent:@"converted.html"] atomically:YES]) {
+		NSLog(@"failed to write to %@!", [MDDesktopDebugFolderPath stringByAppendingPathComponent:@"converted.html"]);
+	}
 #endif
 
 	xmlFreeDoc(doc);

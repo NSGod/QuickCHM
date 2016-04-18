@@ -126,7 +126,7 @@ static NSMutableDictionary *containerReg = nil;
 		containerReg = [[NSMutableDictionary alloc] initWithCapacity:1];
 	NSString *key = [container uniqueID];
 	[containerReg setObject:container forKey:key];
-	DEBUG_OUTPUT([NSString stringWithFormat:@"Container %@ registered", key]); 
+	DEBUG_OUTPUT(@"Container %@ registered", key);
 }
 
 + (void)unregisterContainer:(CHMContainer *)container
@@ -135,7 +135,7 @@ static NSMutableDictionary *containerReg = nil;
 		containerReg = [[NSMutableDictionary alloc] init];
 	NSString *key = [container uniqueID];
 	[containerReg removeObjectForKey:key];
-	DEBUG_OUTPUT([NSString stringWithFormat:@"Container %@ deregistered", key]);
+	DEBUG_OUTPUT(@"Container %@ deregistered", key);
 }	
 
 @end
