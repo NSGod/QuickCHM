@@ -28,26 +28,23 @@
 
 #pragma mark NSObject
 
-- (id) init
-{
-    if( self = [super init] ) {
-        _container = nil;
-    }
-    
-    return self;
+- (id)init {
+	if (self = [super init]) {
+		
+	}
+	return self;
 }
 
 
-- (void) dealloc
-{
-    if( _container ) {
-		[CHMURLProtocol unregisterContainer:_container];
-		[_tableOfContents release];
-		[_container release];
-    }
-    
-    [super dealloc];
+- (void)dealloc {
+	if (container) {
+		[CHMURLProtocol unregisterContainer:container];
+		[tableOfContents release];
+		[container release];
+	}
+	[super dealloc];
 }
+
 
 #pragma mark NSDocument
 
@@ -57,11 +54,11 @@
 	
 	DEBUG_OUTPUT( @"[%@ %@] url.path == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd),url.path);
 	
-	_container = [[CHMContainer alloc] initWithContentsOfFile:url.path];
-	if (_container == nil) return NO;
+	container = [[CHMContainer alloc] initWithContentsOfFile:url.path];
+	if (container == nil) return NO;
 	
-	[CHMURLProtocol registerContainer:_container];
-    _tableOfContents = [[CHMTableOfContents alloc] initWithContainer:_container];
+	[CHMURLProtocol registerContainer:container];
+    tableOfContents = [[CHMTableOfContents alloc] initWithContainer:container];
 
     return YES;
 }
@@ -69,31 +66,27 @@
 
 #pragma mark Accessors
 
-- (NSString *)title
-{
-    return [_container title];
+- (NSString *)title {
+	return [container title];
 }
 
-- (NSURL *)currentLocation
-{
-    return [CHMURLProtocol URLWithPath:[_container homePath] inContainer:_container];
+- (NSURL *)currentLocation {
+	return [CHMURLProtocol URLWithPath:[container homePath] inContainer:container];
 }
 
-- (CHMTableOfContents *)tableOfContents
-{
-    return _tableOfContents;
+- (CHMTableOfContents *)tableOfContents {
+	return tableOfContents;
 }
 
-- (NSString *)uniqueID
-{
-    return [_container uniqueID];
+- (NSString *)uniqueID {
+	return [container uniqueID];
 }
 
-- (NSData *)urlData:(NSURL *)url {
-	if( !_container )
+- (NSData *)dataForURL:(NSURL *)url {
+	if (!container) {
 		return nil;
-	
-    return [_container urlData:url];
+	}
+	return [container dataForURL:url];
 }
 
 @end

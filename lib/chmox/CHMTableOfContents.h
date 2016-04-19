@@ -25,7 +25,7 @@
 @class CHMContainer;
 
 @interface CHMTableOfContents : NSObject {
-    NSMutableArray *_rootTopics;
+    NSMutableArray		*rootTopics;
 }
 
 - (id)initWithContainer:(CHMContainer *)container;

@@ -107,10 +107,10 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
 	
 	if ([doc readFromURL:(NSURL *)URL ofType:(NSString *)contentTypeUTI error:&error]) {
 		// Read main page
-		NSData *mainPageData = [doc urlData:[doc currentLocation]];
+		NSData *mainPageData = [doc dataForURL:[doc currentLocation]];
 		
-		NSString *home = [doc->_container homePath];
-		CoverContext context = { nil, doc, doc->_container,  [home hasSuffix:@"/"] ? home : [home stringByDeletingLastPathComponent]};
+		NSString *home = [doc->container homePath];
+		CoverContext context = { nil, doc, doc->container,  [home hasSuffix:@"/"] ? home : [home stringByDeletingLastPathComponent]};
 
 		htmlDocPtr homePtr = htmlSAXParseDoc((xmlChar *)[mainPageData bytes], NULL, &saxHandler, &context);
 		xmlFreeDoc(homePtr);	
@@ -150,7 +150,7 @@ void elementDidStart(CoverContext *context, const xmlChar *name, const xmlChar *
 					// relative path
 					url = [CHMURLProtocol URLWithPath:[context->homeDir stringByAppendingPathComponent:imgPath] inContainer:context->container];
 				}
-				NSData *img = [context->doc urlData:url];
+				NSData *img = [context->doc dataForURL:url];
 				if ([img length] > [context->cover length])
 					context->cover = img;			
 			} else

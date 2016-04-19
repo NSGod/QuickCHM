@@ -28,16 +28,16 @@
 @interface CHMDocument : NSDocument {
 
 @public
-	CHMContainer *_container;
+	CHMContainer		*container;
     
 @private
-    CHMTableOfContents *_tableOfContents;
+    CHMTableOfContents	*tableOfContents;
 }
 
 - (NSString *)title;
 - (NSURL *)currentLocation;
 - (CHMTableOfContents *)tableOfContents;
-- (NSData *)urlData:(NSURL *)url;
 - (NSString *)uniqueID;
+- (NSData *)dataForURL:(NSURL *)url;
 
 @end

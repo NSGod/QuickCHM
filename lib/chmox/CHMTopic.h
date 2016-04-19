@@ -23,23 +23,25 @@
 
 
 @interface CHMTopic : NSObject {
-    NSString *_name;
-    NSURL *_location;
-    NSMutableArray *_subTopics;
+    NSString			*name;
+    NSURL				*location;
+    NSMutableArray		*subTopics;
+	
 }
 
 - (id)initWithName:(NSString *)topicName location:(NSURL *)topicLocation;
 
 - (NSString *)name;
 - (NSURL *)location;
-- (unsigned int)countOfSubTopics;
-- (CHMTopic *)objectInSubTopicsAtIndex:(unsigned int)index;
+
+- (NSUInteger)countOfSubTopics;
+- (CHMTopic *)objectInSubTopicsAtIndex:(NSUInteger)index;
 
 - (void)setName:(NSString *)text;
 - (void)setLocation:(NSURL *)URL;
 
 - (void)addObject:(CHMTopic *)topic;
-- (void)insertObject:(CHMTopic *)topic inSubTopicsAtIndex:(unsigned int)index;
-- (void)removeObjectFromSubTopicsAtIndex:(unsigned int)index;
+- (void)insertObject:(CHMTopic *)topic inSubTopicsAtIndex:(NSUInteger)index;
+- (void)removeObjectFromSubTopicsAtIndex:(NSUInteger)index;
 
 @end

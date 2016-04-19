@@ -46,10 +46,10 @@ static NSMutableDictionary *containerReg = nil;
 	// but for now let's just use Latin1.
 	CFStringRef str = CFURLCreateStringByAddingPercentEscapes(
             nil,                                // allocator
-            (CFStringRef)path,                  // <#CFStringRef originalString#>
-	    (CFStringRef)@"%#",                 // <#CFStringRef charactersToLeaveUnescaped#>
-	    nil,                                // <#CFStringRef legalURLCharactersToBeEscaped#>,
-	    kCFStringEncodingWindowsLatin1      //<#CFStringEncoding encoding#>
+            (CFStringRef)path,                  // CFStringRef originalString
+	    (CFStringRef)@"%#",                 // CFStringRef charactersToLeaveUnescaped
+	    nil,                                // CFStringRef legalURLCharactersToBeEscaped,
+	    kCFStringEncodingWindowsLatin1      //CFStringEncoding encoding
         );
         
         url = [NSURL URLWithString:(NSString*)str relativeToURL:baseURL];
@@ -93,7 +93,7 @@ static NSMutableDictionary *containerReg = nil;
 	
 	NSString *key = [url host];
     CHMContainer *container = [containerReg objectForKey:key];
-	NSData *data = [container urlData:url];
+	NSData *data = [container dataForURL:url];
     
     if( !data ) {
 		[[self client] URLProtocol:self didFailWithError:[NSError errorWithDomain:NSURLErrorDomain code:0 userInfo:nil]];

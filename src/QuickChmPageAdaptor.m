@@ -144,7 +144,7 @@ static void processImgNodeToDict(xmlNode * cur_node, NSURL *baseUrl, NSString *p
 	NSString *imgSrc = [NSString stringWithUTF8String:src];
 	NSURL *imgURL = (*src == '/') ?	[NSURL URLWithString:imgSrc relativeToURL:baseUrl] : 
 						[NSURL URLWithString:[pageDir stringByAppendingPathComponent:imgSrc] relativeToURL:baseUrl];
-	NSData *data = [container urlData:imgURL];
+	NSData *data = [container dataForURL:imgURL];
 	
 	if (data == nil)
 		return;

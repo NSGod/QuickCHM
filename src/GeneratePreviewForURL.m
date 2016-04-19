@@ -70,10 +70,10 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
 	if ([doc readFromURL:(NSURL *)URL ofType:(NSString *)contentTypeUTI error:&error]) {
 		NSURL *homeUrl = [doc currentLocation];
 		// Get the main page data
-		NSData *data = [doc urlData:homeUrl];	
+		NSData *data = [doc dataForURL:homeUrl];	
 		// Parse and replace hyper link
 		NSMutableDictionary *props=[NSMutableDictionary dictionary];
-		CFDataRef newData = adaptPage(data, doc->_container, homeUrl, &props);
+		CFDataRef newData = adaptPage(data, doc->container, homeUrl, &props);
 		
 		QLPreviewRequestSetDataRepresentation(preview, newData, kUTTypeHTML, (CFDictionaryRef)props);
 		

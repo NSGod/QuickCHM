@@ -26,110 +26,85 @@
 
 #pragma mark Lifecycle
 
-- (id)initWithName:(NSString *)topicName location:(NSURL *)topicLocation
-{
-    if( self = [super init] ) {
-        _name = [topicName retain];
-        _location = [topicLocation retain];
-	_subTopics = nil;
+- (id)initWithName:(NSString *)topicName location:(NSURL *)topicLocation {
+    if ((self = [super init])) {
+        name = [topicName retain];
+        location = [topicLocation retain];
     }
-    
     return self;
 }
 
-- copyWithZone:(NSZone *)zone {
-    CHMTopic *other = [[CHMTopic allocWithZone: zone] initWithName:_name location:_location];
+- (id)copyWithZone:(NSZone *)zone {
+	CHMTopic *other = [[CHMTopic allocWithZone:zone] initWithName:name location:location];
 
-    if( _subTopics ) {
-	other->_subTopics = [_subTopics retain];
-    }
-    
-    return other;
+	if (subTopics) {
+		other->subTopics = [subTopics retain];
+	}
+	return other;
 }
 
-- (void) dealloc
-{
-    [_name release];
-    [_location release];
-    
-    if( _subTopics ) {
-	[_subTopics release];
-    }
 
-    [super dealloc];
+- (void)dealloc {
+	[name release];
+	[location release];
+	[subTopics release];
+	[super dealloc];
 }
 
 
 #pragma mark Accessors
 
-- (NSString *)description
-{
-    return [NSString stringWithFormat:@"<CHMTopic:'%@',%@>", _name, _location];
+- (NSString *)description {
+    return [NSString stringWithFormat:@"<CHMTopic:'%@',%@>", name, location];
 }
 
 
-- (NSString *)name
-{
-    return _name;
+- (NSString *)name {
+    return name;
 }
 
-- (NSURL *)location
-{
-    return _location;
+- (NSURL *)location {
+    return location;
 }
 
-- (unsigned int)countOfSubTopics
-{
-    return _subTopics? [_subTopics count] : 0;
+- (NSUInteger)countOfSubTopics {
+	return [subTopics count];
 }
 
 
-- (CHMTopic *)objectInSubTopicsAtIndex:(unsigned int)theIndex
-{
-    return _subTopics? [_subTopics objectAtIndex:theIndex] : nil;
+- (CHMTopic *)objectInSubTopicsAtIndex:(NSUInteger)theIndex {
+    return [subTopics objectAtIndex:theIndex];
 }
 
 #pragma mark Mutators
 
-- (void)setName:(NSString *)text
-{
-    if( _name != text ) {
-	[_name release];
-	_name = [text retain];
-    }
+- (void)setName:(NSString *)text {
+	if (name != text) {
+		[name release];
+		name = [text retain];
+	}
 }
 
-- (void)setLocation:(NSURL *)URL
-{
-    if( _location != URL ) {
-	[_location release];
-	_location = [URL retain];
-    }
+- (void)setLocation:(NSURL *)URL {
+	if (location != URL) {
+		[location release];
+		location = [URL retain];
+	}
 }
 
-- (void)addObject:(CHMTopic *)topic
-{
-    if( !_subTopics ) {
-        _subTopics = [[NSMutableArray alloc] init];
-    }
-    
-    [_subTopics addObject:topic];
+- (void)addObject:(CHMTopic *)topic {
+	if (!subTopics) subTopics = [[NSMutableArray alloc] init];
+	[subTopics addObject:topic];
 }
 
-- (void)insertObject:(CHMTopic *)topic inSubTopicsAtIndex:(unsigned int)theIndex
-{
-    if( !_subTopics ) {
-        _subTopics = [[NSMutableArray alloc] init];
-    }
-    
-    [_subTopics insertObject:topic atIndex:theIndex];
+
+- (void)insertObject:(CHMTopic *)topic inSubTopicsAtIndex:(NSUInteger)theIndex {
+    if (!subTopics) subTopics = [[NSMutableArray alloc] init];
+    [subTopics insertObject:topic atIndex:theIndex];
 }
 
-- (void)removeObjectFromSubTopicsAtIndex:(unsigned int)theIndex
-{
-    if( _subTopics ) {
-	[_subTopics removeObjectAtIndex:theIndex];
-    }
+- (void)removeObjectFromSubTopicsAtIndex:(NSUInteger)theIndex {
+	[subTopics removeObjectAtIndex:theIndex];
 }
 
 

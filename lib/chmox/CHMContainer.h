@@ -24,34 +24,35 @@
 struct chmFile;
 
 @interface CHMContainer : NSObject {
-    struct chmFile *_handle;
+    struct chmFile		*chmFileHandle;
     NSString			*uniqueID;
     
-    NSString *_path;
-    NSString *_title;    
-    NSString *_tocPath;
-    NSString *_indexPath;
+    NSString			*filePath;
 	
-	NSString *_homePath;
+    NSString			*title;
+    NSString			*tableOfContentsPath;
+    NSString			*indexPath;
+	
+	NSString			*homePath;
+	
+	
 }
 
 + (id)containerWithContentsOfFile:(NSString *)path;
 
 - (id)initWithContentsOfFile:(NSString *)path;
 
-- (bool)hasObjectWithPath: (NSString *)path;
-- (NSData *)dataWithContentsOfObject: (NSString *)objectPath;
-- (NSString *)stringWithContentsOfObject: (NSString *)objectPath;
+
 - (NSData *)dataWithTableOfContents;
 
-- (BOOL)loadMetadata;
-- (NSString *)findHomeForPath: (NSString *)basePath;
+
 
 - (NSString *)title;
-- (NSString *)tocPath;
 - (NSString *)uniqueID;
+- (NSString *)tableOfContentsPath;
 - (NSString *)homePath;
 
-- (NSData *)urlData:(NSURL *)url;
+- (NSData *)dataForURL:(NSURL *)url;
 
 @end
+
