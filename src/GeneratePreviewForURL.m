@@ -20,14 +20,8 @@
 #import <CoreServices/CoreServices.h>
 #import <QuickLook/QuickLook.h>
 
-#import <libxml/parser.h>
-
-#import "CHMDocument.h"
-#import "CHMContainer.h"
-#import "CHMURLProtocol.h"
-#import "CHMTableOfContents.h"
-#import "CHMTopic.h"
-#import "QuickChmPageAdaptor.h"
+#import <CHMKit/CHMKit.h>
+#import "CHMQuickLookHTMLDocument.h"
 
 OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview, CFURLRef url, CFStringRef contentTypeUTI, CFDictionaryRef options);
 void CancelPreviewGeneration(void* thisInterface, QLPreviewRequestRef preview);
@@ -50,45 +44,61 @@ static NSString * const MDCHMQuickLookBundleIdentifier = @"com.markdouma.qlgener
    This function's job is to create preview for designated file
    ----------------------------------------------------------------------------- */
 
-OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview, CFURLRef URL, CFStringRef contentTypeUTI, CFDictionaryRef options)
-{
-	xmlInitParser();
-	LIBXML_TEST_VERSION;
-    
-	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview, CFURLRef URL, CFStringRef contentTypeUTI, CFDictionaryRef options) {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
 	MDLog(@"%@; %s(): file == \"%@\")", MDCHMQuickLookBundleIdentifier, __FUNCTION__, [(NSURL *)URL path]);
 	
-#if DEBUG_MODE
-	BOOL success = [NSURLProtocol registerClass:[CHMURLProtocol class]];
-	DEBUG_OUTPUT(@"NSURLProtocol registration %@", success ? @"SUCCESS" : @"FAIL");
-#endif
-	CHMDocument *doc = [[CHMDocument alloc] init];
-	
-	NSError *error = nil;
-	
-	if ([doc readFromURL:(NSURL *)URL ofType:(NSString *)contentTypeUTI error:&error]) {
-		NSURL *homeUrl = [doc currentLocation];
-		// Get the main page data
-		NSData *data = [doc dataForURL:homeUrl];	
-		// Parse and replace hyper link
-		NSMutableDictionary *props=[NSMutableDictionary dictionary];
-		CFDataRef newData = adaptPage(data, doc->container, homeUrl, &props);
-		
-		QLPreviewRequestSetDataRepresentation(preview, newData, kUTTypeHTML, (CFDictionaryRef)props);
+	if (![NSURLProtocol registerClass:[CHMITSSURLProtocol class]]) {
 		
 	}
 	
-    [doc release];
-	[pool release];
+	[CHMDocumentFile setAutomaticallyPreparesSearchIndex:NO];
 	
-	xmlCleanupParser();
+	CHMQuickLookHTMLDocument *qlHTMLDoc = nil;
+	
+	CHMDocumentFile *documentFile = [[CHMDocumentFile alloc] initWithContentsOfFile:[(NSURL *)URL path] error:NULL];
+	
+	if (documentFile == nil) {
+		NSLog(@"%@; %s(): failed to create CHMDocumentFile for item at \"%@\"", MDCHMQuickLookBundleIdentifier, __FUNCTION__, [(NSURL *)URL path]);
+		goto cleanup;
+	}
+	
+	if (QLPreviewRequestIsCancelled(preview)) goto cleanup;
+	
+	
+	CHMLinkItem *homePageItem = [documentFile itemAtPath:[documentFile homePath]];
+	if (homePageItem == nil) {
+		NSLog(@"%@; %s(): failed to find home page for file at \"%@\"", MDCHMQuickLookBundleIdentifier, __FUNCTION__, [(NSURL *)URL path]);
+		goto cleanup;
+	}
+	
+	NSError *error = nil;
+	qlHTMLDoc = [[CHMQuickLookHTMLDocument alloc] initWithItem:homePageItem inDocumentFile:documentFile error:&error];
+	if (qlHTMLDoc == nil) {
+		NSLog(@"%@; %s(): *** ERROR: failed to create CHMQuickLookHTMLDocument; error == %@", MDCHMQuickLookBundleIdentifier, __FUNCTION__, error);
+		goto cleanup;
+	}
+	
+	if (QLPreviewRequestIsCancelled(preview)) goto cleanup;
+	
+	NSData *adaptedHTMLData = [qlHTMLDoc adaptedHTMLData];
+	NSDictionary *quickLookProperties = [qlHTMLDoc quickLookProperties];
+	
+//	MDLog(@"%@; %s(): (CHMQuickLookHTMLDocument) quickLookProperties == %@", MDCHMQuickLookBundleIdentifier, __FUNCTION__, quickLookProperties);
+	
+	QLPreviewRequestSetDataRepresentation(preview, (CFDataRef)adaptedHTMLData, kUTTypeHTML, (CFDictionaryRef)quickLookProperties);
+	
+	cleanup : {
+		[qlHTMLDoc release];
+		[documentFile release];
+		[pool release];
+	}
 	
     return noErr;
 }
 
-void CancelPreviewGeneration(void* thisInterface, QLPreviewRequestRef preview)
-{
+void CancelPreviewGeneration(void* thisInterface, QLPreviewRequestRef preview) {
 	// implement only if supported
 }
 
