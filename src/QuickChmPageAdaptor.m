@@ -12,6 +12,15 @@
 
 #import "QuickChmPageAdaptor.h"
 
+#define MD_DEBUG 1
+
+#if MD_DEBUG
+#define MDLog(...) NSLog(__VA_ARGS__)
+#else
+#define MDLog(...)
+#endif
+
+static void writeDebugDataToDebugPathWithName(NSData *debugData, NSString *aName);
 
 typedef struct {
 	const char *hrefHostPath;
@@ -187,22 +196,10 @@ static void replaceHref(xmlNode * a_node, ProcessContext *context)
     }
 }
 
-#ifdef DEBUG_MODE
-static NSString * MDDesktopDebugFolderPath = nil;
-#endif
-
 CFDataRef adaptPage(NSData *page, CHMContainer *container, NSURL *pageUrl, NSMutableDictionary **dict)
 {	
 #ifdef DEBUG_MODE
-	if (MDDesktopDebugFolderPath == nil) MDDesktopDebugFolderPath = [[@"~/Desktop/chmDebug" stringByExpandingTildeInPath] retain];
-	
-	if (![[NSFileManager defaultManager] createDirectoryAtPath:MDDesktopDebugFolderPath withIntermediateDirectories:YES attributes:nil error:NULL]) {
-		
-	}
-	
-	if (![page writeToFile:[MDDesktopDebugFolderPath stringByAppendingPathComponent:@"origin.html"] atomically:YES]) {
-		NSLog(@"failed to write to %@!", [MDDesktopDebugFolderPath stringByAppendingPathComponent:@"origin.html"]);
-	}
+	writeDebugDataToDebugPathWithName(page, @"origin.html");
 #endif
 	
 	const char *hrefProtocol = "file://quickchm.href/";	
@@ -237,9 +234,7 @@ CFDataRef adaptPage(NSData *page, CHMContainer *container, NSURL *pageUrl, NSMut
 	xmlChar *tempmem;
 	int tempsize;
 	htmlDocDumpMemory(doc, &tempmem, &tempsize);
-	if (![[NSData dataWithBytes:tempmem length:tempsize] writeToFile:[MDDesktopDebugFolderPath stringByAppendingPathComponent:@"origin2.html"] atomically:YES]) {
-		NSLog(@"failed to write to %@!", [MDDesktopDebugFolderPath stringByAppendingPathComponent:@"origin2.html"]);
-	}
+	writeDebugDataToDebugPathWithName([NSData dataWithBytes:tempmem length:tempsize], @"origin2.html");
 	free(tempmem);
 #endif
 	
@@ -267,9 +262,7 @@ CFDataRef adaptPage(NSData *page, CHMContainer *container, NSURL *pageUrl, NSMut
 	NSData * newData = [NSData dataWithBytes:mem length:size];
 	
 #ifdef DEBUG_MODE
-	if (![newData writeToFile:[MDDesktopDebugFolderPath stringByAppendingPathComponent:@"converted.html"] atomically:YES]) {
-		NSLog(@"failed to write to %@!", [MDDesktopDebugFolderPath stringByAppendingPathComponent:@"converted.html"]);
-	}
+	writeDebugDataToDebugPathWithName(newData, @"converted.html");
 #endif
 
 	xmlFreeDoc(doc);
@@ -279,4 +272,41 @@ CFDataRef adaptPage(NSData *page, CHMContainer *container, NSURL *pageUrl, NSMut
 	
 	return (CFDataRef)newData;
 }
+
+#ifdef DEBUG_MODE
+static NSString * MDDesktopDebugFolderPath = nil;
+
+
+static void writeDebugDataToDebugPathWithName(NSData *debugData, NSString *aName) {
+	if (MDDesktopDebugFolderPath == nil) MDDesktopDebugFolderPath = [[@"~/Desktop/chmDebug" stringByExpandingTildeInPath] retain];
+	
+	if (![[NSFileManager defaultManager] createDirectoryAtPath:MDDesktopDebugFolderPath withIntermediateDirectories:YES attributes:nil error:NULL]) {
+		
+	}
+	
+	static NSDateFormatter *dateFormatter = nil;
+	
+	if (dateFormatter == nil) {
+		dateFormatter = [[NSDateFormatter alloc] init];
+		dateFormatter.dateStyle = NSDateFormatterShortStyle;
+		dateFormatter.timeStyle = NSDateFormatterMediumStyle;
+	}
+	
+	NSString *baseName = [aName stringByDeletingPathExtension];
+	NSString *uniqueBaseName = [baseName stringByAppendingFormat:@"__%@__", [dateFormatter stringFromDate:[NSDate date]]];
+	
+	uniqueBaseName = [uniqueBaseName stringByReplacingOccurrencesOfString:@":" withString:@""];
+	uniqueBaseName = [uniqueBaseName stringByReplacingOccurrencesOfString:@"/" withString:@"-"];
+	uniqueBaseName = [uniqueBaseName stringByReplacingOccurrencesOfString:@", " withString:@"__"];
+	
+	NSString *uniqueName = [uniqueBaseName stringByAppendingPathExtension:[aName pathExtension]];
+	NSError *error = nil;
+	
+	if (![debugData writeToFile:[MDDesktopDebugFolderPath stringByAppendingPathComponent:uniqueName] options:NSDataWritingAtomic error:&error]) {
+		NSLog(@"*** ERROR: failed to write debugData to \"%@\", error == %@", [MDDesktopDebugFolderPath stringByAppendingPathComponent:uniqueName], error);
+	}
+}
+
+#endif
+
 
