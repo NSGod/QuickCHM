@@ -67,14 +67,14 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
 	if (QLPreviewRequestIsCancelled(preview)) goto cleanup;
 	
 	
-	CHMLinkItem *homePageItem = [documentFile itemAtPath:[documentFile homePath]];
+	CHMLinkItem *homePageItem = [documentFile linkItemAtPath:[documentFile homePath]];
 	if (homePageItem == nil) {
 		NSLog(@"%@; %s(): failed to find home page for file at \"%@\"", MDCHMQuickLookBundleIdentifier, __FUNCTION__, [(NSURL *)URL path]);
 		goto cleanup;
 	}
 	
 	NSError *error = nil;
-	qlHTMLDoc = [[CHMQuickLookHTMLDocument alloc] initWithItem:homePageItem inDocumentFile:documentFile error:&error];
+	qlHTMLDoc = [[CHMQuickLookHTMLDocument alloc] initWithLinkItem:homePageItem inDocumentFile:documentFile error:&error];
 	if (qlHTMLDoc == nil) {
 		NSLog(@"%@; %s(): *** ERROR: failed to create CHMQuickLookHTMLDocument; error == %@", MDCHMQuickLookBundleIdentifier, __FUNCTION__, error);
 		goto cleanup;

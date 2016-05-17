@@ -15,13 +15,12 @@
 @interface CHMQuickLookHTMLDocument : NSObject {
 	NSXMLDocument			*document;
 	CHMDocumentFile			*documentFile;
-	CHMLinkItem				*item;
+	CHMLinkItem				*linkItem;
 	NSMutableDictionary		*quickLookProperties;
 	
 }
 
-+ (id)quickLookHTMLDocumentWithItem:(CHMLinkItem *)anItem inDocumentFile:(CHMDocumentFile *)aDocumentFile error:(NSError **)outError;
-- (id)initWithItem:(CHMLinkItem *)anItem inDocumentFile:(CHMDocumentFile *)aDocumentFile error:(NSError **)outError;
+- (id)initWithLinkItem:(CHMLinkItem *)anItem inDocumentFile:(CHMDocumentFile *)aDocumentFile error:(NSError **)outError;
 
 
 @property (readonly, nonatomic, retain) NSData *adaptedHTMLData;

@@ -62,7 +62,7 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
 	
 	if (QLThumbnailRequestIsCancelled(thumbnail)) goto cleanup;
 	
-	CHMLinkItem *mainPageItem = [documentFile itemAtPath:[documentFile homePath]];
+	CHMLinkItem *mainPageItem = [documentFile linkItemAtPath:[documentFile homePath]];
 	
 	NSData *mainPageData = [documentFile dataForObjectAtPath:mainPageItem.path];
 	
@@ -96,7 +96,7 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
 		NSXMLNode *srcAttribute = [imgElement attributeForName:@"src"];
 		NSString *path = [srcAttribute stringValue];
 		
-		NSData *imgData = [documentFile dataForObjectAtPath:path relativeToItem:mainPageItem];
+		NSData *imgData = [documentFile dataForObjectAtPath:path relativeToLinkItem:mainPageItem];
 		
 		if (imgData.length > coverImageData.length) coverImageData = imgData;
 	}

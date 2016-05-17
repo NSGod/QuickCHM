@@ -48,7 +48,7 @@
 
 @property (nonatomic, retain) NSXMLDocument *document;
 @property (nonatomic, retain) CHMDocumentFile *documentFile;
-@property (nonatomic, retain) CHMLinkItem *item;
+@property (nonatomic, retain) CHMLinkItem *linkItem;
 
 - (void)adaptHTML;
 
@@ -71,7 +71,7 @@ static NSString * MDDesktopDebugFolderPath = nil;
 
 @synthesize document;
 @synthesize documentFile;
-@synthesize item;
+@synthesize linkItem;
 @synthesize quickLookProperties;
 
 @dynamic adaptedHTMLData;
@@ -90,24 +90,19 @@ static NSString * MDDesktopDebugFolderPath = nil;
 #endif
 
 
-+ (id)quickLookHTMLDocumentWithItem:(CHMLinkItem *)anItem inDocumentFile:(CHMDocumentFile *)aDocumentFile error:(NSError **)outError {
-	return [[[[self class] alloc] initWithItem:anItem inDocumentFile:aDocumentFile error:outError] autorelease];
-}
-
-
-- (id)initWithItem:(CHMLinkItem *)anItem inDocumentFile:(CHMDocumentFile *)aDocumentFile error:(NSError **)outError {
+- (id)initWithLinkItem:(CHMLinkItem *)anItem inDocumentFile:(CHMDocumentFile *)aDocumentFile error:(NSError **)outError {
 	if ((self = [super init])) {
-		item = [anItem retain];
+		linkItem = [anItem retain];
 		documentFile = [aDocumentFile retain];
 		
-		NSData *pageData = [documentFile dataForObjectAtPath:item.path];
+		NSData *pageData = [documentFile dataForObjectAtPath:linkItem.path];
 		if (pageData == nil) {
 			if (outError) {
 				*outError = [NSError errorWithDomain:NSCocoaErrorDomain
 												code:0
 											userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
 													  documentFile.filePath, NSFilePathErrorKey,
-													  [NSString stringWithFormat:@"Failed to obtain data for object at path \"%@\"", item.path], NSLocalizedDescriptionKey, nil]];
+													  [NSString stringWithFormat:@"Failed to obtain data for object at path \"%@\"", linkItem.path], NSLocalizedDescriptionKey, nil]];
 			}
 			[self release];
 			return nil;
@@ -143,7 +138,7 @@ static NSString * MDDesktopDebugFolderPath = nil;
 	[document release];
 	[documentFile release];
 	[quickLookProperties release];
-	[item release];
+	[linkItem release];
 	[super dealloc];
 }
 
@@ -177,7 +172,7 @@ static NSString * MDDesktopDebugFolderPath = nil;
 	if (![typeAttr.stringValue isEqualToString:@"text/css"]) return;
 	
 	NSString *cssFilePath = [[hrefAttr.stringValue copy] autorelease];
-	NSData *cssData = [documentFile dataForObjectAtPath:cssFilePath relativeToItem:item];
+	NSData *cssData = [documentFile dataForObjectAtPath:cssFilePath relativeToLinkItem:linkItem];
 	if (cssData == nil) {
 		
 		return;
@@ -200,7 +195,7 @@ static NSString * MDDesktopDebugFolderPath = nil;
 		return;
 	}
 	NSString *imgFilePath = [[srcAttr.stringValue copy] autorelease];
-	NSData *imgData = [documentFile dataForObjectAtPath:imgFilePath relativeToItem:item];
+	NSData *imgData = [documentFile dataForObjectAtPath:imgFilePath relativeToLinkItem:linkItem];
 	if (imgData == nil) {
 		
 		return;
