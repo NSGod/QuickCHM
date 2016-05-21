@@ -75,7 +75,10 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
 	
 	NSError *error = nil;
 	
-	htmlDoc = [[NSXMLDocument alloc] initWithData:mainPageData options:NSXMLDocumentTidyHTML error:&error];
+	// pass NSXMLDocumentTidyXML | NSXMLDocumentTidyHTML (both) for best results, as they aren't mutually exclusive
+	// NSXMLDocumentTidyXML fixes invalid XML, NSXMLDocumentTidyHTML can make strings easier to read
+	
+	htmlDoc = [[NSXMLDocument alloc] initWithData:mainPageData options:NSXMLDocumentTidyXML | NSXMLDocumentTidyHTML error:&error];
 	if (htmlDoc == nil) {
 		NSLog(@"%@; %s(): failed to create NSXMLDocument for item at \"%@\"; error == %@", MDCHMQuickLookBundleIdentifier, __FUNCTION__, [(NSURL *)URL path], error);
 		goto cleanup;

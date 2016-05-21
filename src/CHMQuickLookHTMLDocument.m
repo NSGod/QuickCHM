@@ -109,7 +109,11 @@ static NSString * MDDesktopDebugFolderPath = nil;
 		}
 		
 		NSError *error = nil;
-		document = [[NSXMLDocument alloc] initWithData:pageData options:NSXMLDocumentTidyHTML error:&error];
+		
+		// pass NSXMLDocumentTidyXML | NSXMLDocumentTidyHTML (both) for best results, as they aren't mutually exclusive
+		// NSXMLDocumentTidyXML fixes invalid XML, NSXMLDocumentTidyHTML can make strings easier to read
+		
+		document = [[NSXMLDocument alloc] initWithData:pageData options:NSXMLDocumentTidyXML | NSXMLDocumentTidyHTML error:&error];
 		
 		if (document == nil) {
 			if (outError && error) {
