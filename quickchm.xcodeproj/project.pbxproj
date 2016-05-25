@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		121D2FAA0D05364E003EB4F4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 121D2FA80D05364E003EB4F4 /* Cocoa.framework */; };
+		121D2FAA0D05364E003EB4F4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 121D2FA80D05364E003EB4F4 /* Cocoa.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		123DB9CD0D07D322007FAFF3 /* LICENSE.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 123DB9CC0D07D322007FAFF3 /* LICENSE.rtf */; };
 		C11481671CC5895000894396 /* CHM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C114815C1CC5892E00894396 /* CHM.framework */; };
 		C1CFFB311CE3BF9100DDAAF3 /* GenerateThumbnailForURL.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC235F116419CDB00A128C6 /* GenerateThumbnailForURL.m */; };
