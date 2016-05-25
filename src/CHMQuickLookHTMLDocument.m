@@ -52,7 +52,6 @@
 
 - (void)adaptHTML;
 
-- (NSString *)MIMETypeForPath:(NSString *)aPath;
 - (NSMutableDictionary *)attachmentsDictionary;
 
 #if MD_DEBUG_DUMP_TO_FILES
@@ -207,7 +206,7 @@ static NSString * MDDesktopDebugFolderPath = nil;
 	
 	NSString *contentIDFilePath = [@"cid:" stringByAppendingString:imgFilePath];
 	srcAttr.stringValue = contentIDFilePath;
-	NSString *mimeType = [self MIMETypeForPath:imgFilePath];
+	NSString *mimeType = [CHMArchiveItem MIMETypeForPathExtension:[imgFilePath pathExtension]];
 	
 	NSMutableDictionary *attachments = [self attachmentsDictionary];
 	NSMutableDictionary *attachmentEntry = [NSMutableDictionary dictionaryWithObjectsAndKeys:imgData,(id)kQLPreviewPropertyAttachmentDataKey, nil];
@@ -252,14 +251,6 @@ static NSString * MDDesktopDebugFolderPath = nil;
 	
 }
 
-
-- (NSString *)MIMETypeForPath:(NSString *)aPath {
-	NSString *pathExtension = [aPath pathExtension];
-	NSString *utiType = [(NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (CFStringRef)pathExtension, NULL) autorelease];
-	if (utiType == nil) return nil;
-	NSString *MIMEType = [(NSString *)UTTypeCopyPreferredTagWithClass((CFStringRef)utiType, kUTTagClassMIMEType) autorelease];
-	return MIMEType;
-}
 
 
 #if MD_DEBUG_DUMP_TO_FILES
