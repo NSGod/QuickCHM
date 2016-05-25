@@ -64,7 +64,7 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
 	
 	CHMLinkItem *mainPageItem = [documentFile linkItemAtPath:[documentFile homePath]];
 	
-	NSData *mainPageData = [documentFile dataForObjectAtPath:mainPageItem.path];
+	NSData *mainPageData = mainPageItem.archiveItem.data;
 	
 	if (mainPageData == nil) {
 		NSLog(@"%@; %s(): failed to find home page for file at \"%@\"", MDCHMQuickLookBundleIdentifier, __FUNCTION__, [(NSURL *)URL path]);
@@ -99,7 +99,7 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
 		NSXMLNode *srcAttribute = [imgElement attributeForName:@"src"];
 		NSString *path = [srcAttribute stringValue];
 		
-		NSData *imgData = [documentFile dataForObjectAtPath:path relativeToLinkItem:mainPageItem];
+		NSData *imgData = [documentFile archiveItemAtPath:path relativeToArchiveItem:mainPageItem.archiveItem].data;
 		
 		if (imgData.length > coverImageData.length) coverImageData = imgData;
 	}

@@ -94,7 +94,7 @@ static NSString * MDDesktopDebugFolderPath = nil;
 		linkItem = [anItem retain];
 		documentFile = [aDocumentFile retain];
 		
-		NSData *pageData = [documentFile dataForObjectAtPath:linkItem.path];
+		NSData *pageData = linkItem.archiveItem.data;
 		if (pageData == nil) {
 			if (outError) {
 				*outError = [NSError errorWithDomain:NSCocoaErrorDomain
@@ -175,7 +175,8 @@ static NSString * MDDesktopDebugFolderPath = nil;
 	if (![typeAttr.stringValue isEqualToString:@"text/css"]) return;
 	
 	NSString *cssFilePath = [[hrefAttr.stringValue copy] autorelease];
-	NSData *cssData = [documentFile dataForObjectAtPath:cssFilePath relativeToLinkItem:linkItem];
+	CHMArchiveItem *cssItem = [documentFile archiveItemAtPath:cssFilePath relativeToArchiveItem:linkItem.archiveItem];
+	NSData *cssData = cssItem.data;
 	if (cssData == nil) {
 		
 		return;
@@ -198,7 +199,7 @@ static NSString * MDDesktopDebugFolderPath = nil;
 		return;
 	}
 	NSString *imgFilePath = [[srcAttr.stringValue copy] autorelease];
-	NSData *imgData = [documentFile dataForObjectAtPath:imgFilePath relativeToLinkItem:linkItem];
+	NSData *imgData = [documentFile archiveItemAtPath:imgFilePath relativeToArchiveItem:linkItem.archiveItem].data;
 	if (imgData == nil) {
 		
 		return;
