@@ -109,16 +109,6 @@
 		EAC235F616419CDB00A128C6 /* StringUtil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = StringUtil.c; sourceTree = "<group>"; };
 		EAC235F716419CDB00A128C6 /* StringUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringUtil.h; sourceTree = "<group>"; };
 		EAC2360016419CF600A128C6 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
-		EAC2362A16419D1D00A128C6 /* CHMContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CHMContainer.h; path = lib/chmox/CHMContainer.h; sourceTree = "<group>"; };
-		EAC2362B16419D1D00A128C6 /* CHMContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CHMContainer.m; path = lib/chmox/CHMContainer.m; sourceTree = "<group>"; };
-		EAC2362C16419D1D00A128C6 /* CHMDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CHMDocument.h; path = lib/chmox/CHMDocument.h; sourceTree = "<group>"; };
-		EAC2362D16419D1D00A128C6 /* CHMDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CHMDocument.m; path = lib/chmox/CHMDocument.m; sourceTree = "<group>"; };
-		EAC2362E16419D1D00A128C6 /* CHMTableOfContents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CHMTableOfContents.h; path = lib/chmox/CHMTableOfContents.h; sourceTree = "<group>"; };
-		EAC2362F16419D1D00A128C6 /* CHMTableOfContents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CHMTableOfContents.m; path = lib/chmox/CHMTableOfContents.m; sourceTree = "<group>"; };
-		EAC2363016419D1D00A128C6 /* CHMTopic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CHMTopic.h; path = lib/chmox/CHMTopic.h; sourceTree = "<group>"; };
-		EAC2363116419D1D00A128C6 /* CHMTopic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CHMTopic.m; path = lib/chmox/CHMTopic.m; sourceTree = "<group>"; };
-		EAC2363216419D1D00A128C6 /* CHMURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CHMURLProtocol.h; path = lib/chmox/CHMURLProtocol.h; sourceTree = "<group>"; };
-		EAC2363316419D1D00A128C6 /* CHMURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CHMURLProtocol.m; path = lib/chmox/CHMURLProtocol.m; sourceTree = "<group>"; };
 		EAC2364216419D7E00A128C6 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = SOURCE_ROOT; };
 		EAC2364316419D7E00A128C6 /* prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prefix.pch; sourceTree = SOURCE_ROOT; };
 		F28CFBFC0A3EC0AF000ABFF5 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
@@ -190,7 +180,6 @@
 			children = (
 				C1DA9F301CDA498E00FE354F /* CHMKit */,
 				C11481511CC5883500894396 /* chmlib */,
-				C11481521CC5884E00894396 /* unused */,
 			);
 			name = "External Libraries";
 			sourceTree = "<group>";
@@ -201,23 +190,6 @@
 				C11481531CC5892E00894396 /* CHM Framework.xcodeproj */,
 			);
 			name = chmlib;
-			sourceTree = "<group>";
-		};
-		C11481521CC5884E00894396 /* unused */ = {
-			isa = PBXGroup;
-			children = (
-				EAC2362C16419D1D00A128C6 /* CHMDocument.h */,
-				EAC2362D16419D1D00A128C6 /* CHMDocument.m */,
-				EAC2362A16419D1D00A128C6 /* CHMContainer.h */,
-				EAC2362B16419D1D00A128C6 /* CHMContainer.m */,
-				EAC2362E16419D1D00A128C6 /* CHMTableOfContents.h */,
-				EAC2362F16419D1D00A128C6 /* CHMTableOfContents.m */,
-				EAC2363016419D1D00A128C6 /* CHMTopic.h */,
-				EAC2363116419D1D00A128C6 /* CHMTopic.m */,
-				EAC2363216419D1D00A128C6 /* CHMURLProtocol.h */,
-				EAC2363316419D1D00A128C6 /* CHMURLProtocol.m */,
-			);
-			name = unused;
 			sourceTree = "<group>";
 		};
 		C11481541CC5892E00894396 /* Products */ = {

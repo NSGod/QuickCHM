@@ -47,7 +47,7 @@ static NSString * const MDCHMQuickLookBundleIdentifier = @"com.markdouma.qlgener
 OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview, CFURLRef URL, CFStringRef contentTypeUTI, CFDictionaryRef options) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
-	MDLog(@"%@; %s(): file == \"%@\")", MDCHMQuickLookBundleIdentifier, __FUNCTION__, [(NSURL *)URL path]);
+	MDLog(@"%@; %s(): file == \"%@\"", MDCHMQuickLookBundleIdentifier, __FUNCTION__, [(NSURL *)URL path]);
 	
 	if (![NSURLProtocol registerClass:[CHMITSSURLProtocol class]]) {
 		
