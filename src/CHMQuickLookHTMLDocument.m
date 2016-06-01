@@ -22,11 +22,11 @@
 
 #define MD_DEBUG_DUMP_TO_FILES 0
 
-static NSStringEncoding CHMStringEncodingFromIANAEncodingName(NSString *encodingName) {
+static inline NSStringEncoding CHMStringEncodingFromIANAEncodingName(NSString *encodingName) {
 	return CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding((CFStringRef)encodingName));
 }
 
-static NSString *CHMIANAEncodingNameFromEncoding(NSStringEncoding encoding) {
+static inline NSString *CHMIANAEncodingNameFromEncoding(NSStringEncoding encoding) {
 	return (NSString *)CFStringConvertEncodingToIANACharSetName(CFStringConvertNSStringEncodingToEncoding(encoding));
 }
 
@@ -134,9 +134,16 @@ static NSString * MDDesktopDebugFolderPath = nil;
 			return nil;
 		}
 		
+		MDLog(@"[%@ %@] document.characterEncoding == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), document.characterEncoding);
+		
+		// set the most common and likely characterEncoding, if there isn't one (ISOLatin1)
+		if (document.characterEncoding == nil) {
+			document.characterEncoding = CHMIANAEncodingNameFromEncoding(NSISOLatin1StringEncoding);
+		}
+		
 		quickLookProperties = [[NSMutableDictionary alloc] init];
 		
-		if (documentFile.encodingName) [quickLookProperties setObject:documentFile.encodingName forKey:(id)kQLPreviewPropertyTextEncodingNameKey];
+		if (document.characterEncoding) [quickLookProperties setObject:document.characterEncoding forKey:(id)kQLPreviewPropertyTextEncodingNameKey];
 		[quickLookProperties setObject:@"text/html" forKey:(id)kQLPreviewPropertyMIMETypeKey];
 		
 		[self adaptHTML];
@@ -182,9 +189,8 @@ static NSString * MDDesktopDebugFolderPath = nil;
 	if (document.characterEncoding) [mEncodingNames addObject:document.characterEncoding];
 	if (documentFile.encodingName) [mEncodingNames addObject:documentFile.encodingName];
 	
-	MDLog(@"[%@ %@] mEncodingNames == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), mEncodingNames);
-	
-	NSArray *encodingNames = mEncodingNames.allObjects;
+	// we want ISOLatin1 before WinLatin1
+	NSArray *encodingNames = [mEncodingNames.allObjects sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
 	
 	for (NSString *encodingName in encodingNames) {
 		NSStringEncoding nsStringEncoding = CHMStringEncodingFromIANAEncodingName(encodingName);
@@ -192,12 +198,7 @@ static NSString * MDDesktopDebugFolderPath = nil;
 		if (cssString) return cssString;
 		[mTriedEncodings addObject:[NSNumber numberWithUnsignedInteger:nsStringEncoding]];
 	}
-	
-	if (![mTriedEncodings containsObject:[NSNumber numberWithUnsignedInteger:NSWindowsCP1252StringEncoding]]) {
-		NSString *cssString = [[[NSString alloc] initWithData:data encoding:NSWindowsCP1252StringEncoding] autorelease];
-		if (cssString) return cssString;
-		[mTriedEncodings addObject:[NSNumber numberWithUnsignedInteger:NSWindowsCP1252StringEncoding]];
-	}
+	// prefer ISOLatin1 first, then others
 	if (![mTriedEncodings containsObject:[NSNumber numberWithUnsignedInteger:NSISOLatin1StringEncoding]]) {
 		NSString *cssString = [[[NSString alloc] initWithData:data encoding:NSISOLatin1StringEncoding] autorelease];
 		if (cssString) return cssString;
@@ -208,14 +209,18 @@ static NSString * MDDesktopDebugFolderPath = nil;
 		if (cssString) return cssString;
 		[mTriedEncodings addObject:[NSNumber numberWithUnsignedInteger:NSUTF8StringEncoding]];
 	}
-	
+	if (![mTriedEncodings containsObject:[NSNumber numberWithUnsignedInteger:NSWindowsCP1252StringEncoding]]) {
+		NSString *cssString = [[[NSString alloc] initWithData:data encoding:NSWindowsCP1252StringEncoding] autorelease];
+		if (cssString) return cssString;
+		[mTriedEncodings addObject:[NSNumber numberWithUnsignedInteger:NSWindowsCP1252StringEncoding]];
+	}
 	return nil;
 }
 
 
 - (void)adaptCSSString:(NSMutableString *)mCSSString inArchiveItem:(CHMArchiveItem *)anItem {
 	
-	MDLog(@"[%@ %@] cssString (BEFORE) == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), mCSSString);
+//	MDLog(@"[%@ %@] cssString (BEFORE) == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), mCSSString);
 	
 	static NSCharacterSet *quotesCharacterSet = nil;
 	if (quotesCharacterSet == nil) quotesCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:@"\"'"] retain];
@@ -243,8 +248,6 @@ static NSString * MDDesktopDebugFolderPath = nil;
 			
 			NSString *quotelessURLString = [URLString stringByTrimmingCharactersInSet:quotesCharacterSet];
 			
-			MDLog(@"[%@ %@] quotelessURLString == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), quotelessURLString);
-			
 			CHMArchiveItem *urlArchiveItem = [documentFile archiveItemAtPath:URLString relativeToArchiveItem:anItem];
 			NSData *itemData = urlArchiveItem.data;
 			if (urlArchiveItem == nil || itemData == nil) {
@@ -266,7 +269,7 @@ static NSString * MDDesktopDebugFolderPath = nil;
 		}
 	}
 	
-	MDLog(@"[%@ %@] cssString (AFTER) == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), mAdaptedCSSString);
+//	MDLog(@"[%@ %@] cssString (AFTER) == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), mAdaptedCSSString);
 	
 	[mCSSString setString:mAdaptedCSSString];
 }
@@ -299,7 +302,7 @@ static NSString * MDDesktopDebugFolderPath = nil;
 	NSString *cssString = [self stringFromData:cssData];
 	
 	NSData *adaptedCSSData = cssData;
-	NSString *adaptedCSSStringEncodingName = documentFile.encodingName;
+	NSString *adaptedCSSStringEncodingName = document.characterEncoding;
 	
 	if (cssString) {
 		NSMutableString *mCSSString = [[cssString mutableCopy] autorelease];
@@ -389,7 +392,6 @@ static NSString * MDDesktopDebugFolderPath = nil;
 #endif
 	
 }
-
 
 
 #if MD_DEBUG_DUMP_TO_FILES
