@@ -26,15 +26,15 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
 void CancelThumbnailGeneration(void* thisInterface, QLThumbnailRequestRef thumbnail);
 
 
-#define MD_DEBUG 1
+#define MD_DEBUG 0
 
 #if MD_DEBUG
-static NSString * const MDCHMQuickLookBundleIdentifier = @"com.markdouma.qlgenerator.CHM";
 #define MDLog(...) NSLog(__VA_ARGS__)
 #else
 #define MDLog(...)
 #endif
 
+static NSString * const MDCHMQuickLookBundleIdentifier = @"com.markdouma.qlgenerator.CHM";
 
 
 /* -----------------------------------------------------------------------------

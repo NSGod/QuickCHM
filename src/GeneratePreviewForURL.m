@@ -27,14 +27,16 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
 void CancelPreviewGeneration(void* thisInterface, QLPreviewRequestRef preview);
 
 
-#define MD_DEBUG 1
+#define MD_DEBUG 0
 
 #if MD_DEBUG
-static NSString * const MDCHMQuickLookBundleIdentifier = @"com.markdouma.qlgenerator.CHM";
 #define MDLog(...) NSLog(__VA_ARGS__)
 #else
 #define MDLog(...)
 #endif
+
+static NSString * const MDCHMQuickLookBundleIdentifier = @"com.markdouma.qlgenerator.CHM";
+
 
 #pragma mark Generate preview
 
