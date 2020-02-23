@@ -5,6 +5,7 @@
 //  Created by Qian Qian on 6/29/08.
 //  Copyright 2008 __MyCompanyName__. All rights reserved.
 //
+#ifdef CHM_BUILD_WITH_CHMOX
 
 #import <libxml/HTMLparser.h>
 #import <libxml/HTMLtree.h>
@@ -309,4 +310,6 @@ static void writeDebugDataToDebugPathWithName(NSData *debugData, NSString *aName
 
 #endif
 
+
+#endif
 

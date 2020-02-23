@@ -7,6 +7,8 @@
  *
  */
 
+#ifdef CHM_BUILD_WITH_CHMOX
+
 #include "StringUtil.h"
 
 
@@ -17,3 +19,5 @@ char *concateString(const char *s1, const char *s2) {
 	strncat((char *)s, (char *)s2, len);
 	return s;
 }
+
+#endif
