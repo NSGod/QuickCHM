@@ -5,12 +5,23 @@
 //  Created by Qian Qian on 6/29/08.
 //  Copyright 2008 __MyCompanyName__. All rights reserved.
 //
+#ifdef CHM_BUILD_WITH_CHMOX
 
 #import <libxml/HTMLparser.h>
 #import <libxml/HTMLtree.h>
 #import <libxml/tree.h>
 
 #import "QuickChmPageAdaptor.h"
+
+#define MD_DEBUG 1
+
+#if MD_DEBUG
+#define MDLog(...) NSLog(__VA_ARGS__)
+#else
+#define MDLog(...)
+#endif
+
+static void writeDebugDataToDebugPathWithName(NSData *debugData, NSString *aName);
 
 typedef struct {
 	const char *hrefHostPath;
@@ -97,7 +108,8 @@ static void processHrefNode(xmlNode * cur_node, const char *hrefHostPath, const 
 		strncat(script, newUrl, len);
 		strncat(script, "'", len);
 		script[len-1] = 0;
-		DEBUG_OUTPUT([NSString stringWithFormat:@"%@%@%@%@", @"QuickChm Adaptor : Change ", [NSString stringWithCString:url], @" to ", [NSString stringWithCString:script]]);
+		
+		DEBUG_OUTPUT(@"QuickChm Adaptor : Change %s to %s", url, script);
 		
 		// create javascript attribute
 		xmlNewProp(cur_node, ONCLICK, (xmlChar *)script);
@@ -122,7 +134,7 @@ static void processImgNodeToUrl(xmlNode * cur_node, const char *imgHostPath, con
 	char *newSrc = (*src == '/') ? 
 		concateString(imgHostPath, src) : concateString(imgRelativePath, src);
 	
-	DEBUG_OUTPUT([NSString stringWithFormat:@"%@%@%@%@", @"QuickChm Adaptor : Change ", [NSString stringWithCString:src], @" to ", [NSString stringWithCString:newSrc]]);
+	DEBUG_OUTPUT(@"QuickChm Adaptor : Change %s to %s", src, newSrc);
 	
 	xmlSetProp(cur_node, SRC, (xmlChar *)newSrc);
 	
@@ -139,10 +151,10 @@ static void processImgNodeToDict(xmlNode * cur_node, NSURL *baseUrl, NSString *p
 	if (src == NULL)
 		return;
 	
-	NSString *imgSrc = [NSString stringWithCString:src];
+	NSString *imgSrc = [NSString stringWithUTF8String:src];
 	NSURL *imgURL = (*src == '/') ?	[NSURL URLWithString:imgSrc relativeToURL:baseUrl] : 
 						[NSURL URLWithString:[pageDir stringByAppendingPathComponent:imgSrc] relativeToURL:baseUrl];
-	NSData *data = [container urlData:imgURL];
+	NSData *data = [container dataForURL:imgURL];
 	
 	if (data == nil)
 		return;
@@ -160,7 +172,7 @@ static void processImgNodeToDict(xmlNode * cur_node, NSURL *baseUrl, NSString *p
 	// finally, update the src attr
 	char *newSrc = concateString("cid:", [imgSrc UTF8String]);
 	
-	DEBUG_OUTPUT([NSString stringWithFormat:@"%@%@%@%@", @"QuickChm Adaptor : Change ", [NSString stringWithCString:src], @" to ", [NSString stringWithCString:newSrc]]);
+	DEBUG_OUTPUT(@"QuickChm Adaptor : Change %s to %s", src, newSrc);
 	
 	xmlSetProp(cur_node, SRC, (xmlChar *)newSrc);
 	
@@ -185,17 +197,16 @@ static void replaceHref(xmlNode * a_node, ProcessContext *context)
     }
 }
 
-
 CFDataRef adaptPage(NSData *page, CHMContainer *container, NSURL *pageUrl, NSMutableDictionary **dict)
-{
+{	
 #ifdef DEBUG_MODE
-	[page writeToFile:@"/origin.htm" atomically:YES];	
+	writeDebugDataToDebugPathWithName(page, @"origin.html");
 #endif
 	
 	const char *hrefProtocol = "file://quickchm.href/";	
 	const char *imgProtocol = "file://quickchm.img/";	
 	
-	NSString *containerId = [container uniqueId];
+	NSString *containerId = [container uniqueID];
 	const char *uid = [containerId UTF8String];;
 	
 	// create host path
@@ -224,7 +235,7 @@ CFDataRef adaptPage(NSData *page, CHMContainer *container, NSURL *pageUrl, NSMut
 	xmlChar *tempmem;
 	int tempsize;
 	htmlDocDumpMemory(doc, &tempmem, &tempsize);
-	[[NSData dataWithBytes:tempmem length:tempsize] writeToFile:@"/origin2.htm" atomically:YES];
+	writeDebugDataToDebugPathWithName([NSData dataWithBytes:tempmem length:tempsize], @"origin2.html");
 	free(tempmem);
 #endif
 	
@@ -252,7 +263,7 @@ CFDataRef adaptPage(NSData *page, CHMContainer *container, NSURL *pageUrl, NSMut
 	NSData * newData = [NSData dataWithBytes:mem length:size];
 	
 #ifdef DEBUG_MODE
-	[newData writeToFile:@"/convert.htm" atomically:YES];
+	writeDebugDataToDebugPathWithName(newData, @"converted.html");
 #endif
 
 	xmlFreeDoc(doc);
@@ -262,4 +273,43 @@ CFDataRef adaptPage(NSData *page, CHMContainer *container, NSURL *pageUrl, NSMut
 	
 	return (CFDataRef)newData;
 }
+
+#ifdef DEBUG_MODE
+static NSString * MDDesktopDebugFolderPath = nil;
+
+
+static void writeDebugDataToDebugPathWithName(NSData *debugData, NSString *aName) {
+	if (MDDesktopDebugFolderPath == nil) MDDesktopDebugFolderPath = [[@"~/Desktop/chmDebug" stringByExpandingTildeInPath] retain];
+	
+	if (![[NSFileManager defaultManager] createDirectoryAtPath:MDDesktopDebugFolderPath withIntermediateDirectories:YES attributes:nil error:NULL]) {
+		
+	}
+	
+	static NSDateFormatter *dateFormatter = nil;
+	
+	if (dateFormatter == nil) {
+		dateFormatter = [[NSDateFormatter alloc] init];
+		dateFormatter.dateStyle = NSDateFormatterShortStyle;
+		dateFormatter.timeStyle = NSDateFormatterMediumStyle;
+	}
+	
+	NSString *baseName = [aName stringByDeletingPathExtension];
+	NSString *uniqueBaseName = [baseName stringByAppendingFormat:@"__%@__", [dateFormatter stringFromDate:[NSDate date]]];
+	
+	uniqueBaseName = [uniqueBaseName stringByReplacingOccurrencesOfString:@":" withString:@""];
+	uniqueBaseName = [uniqueBaseName stringByReplacingOccurrencesOfString:@"/" withString:@"-"];
+	uniqueBaseName = [uniqueBaseName stringByReplacingOccurrencesOfString:@", " withString:@"__"];
+	
+	NSString *uniqueName = [uniqueBaseName stringByAppendingPathExtension:[aName pathExtension]];
+	NSError *error = nil;
+	
+	if (![debugData writeToFile:[MDDesktopDebugFolderPath stringByAppendingPathComponent:uniqueName] options:NSDataWritingAtomic error:&error]) {
+		NSLog(@"*** ERROR: failed to write debugData to \"%@\", error == %@", [MDDesktopDebugFolderPath stringByAppendingPathComponent:uniqueName], error);
+	}
+}
+
+#endif
+
+
+#endif
 

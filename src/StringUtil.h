@@ -7,7 +7,11 @@
  *
  */
 
+#ifdef CHM_BUILD_WITH_CHMOX
+
 #import <CoreFoundation/CoreFoundation.h>
 #import <CoreServices/CoreServices.h>
 
 char *concateString(const char *dest, const char *origin);
+
+#endif

@@ -19,56 +19,22 @@
 #import <CoreFoundation/CFPlugInCOM.h>
 #import <CoreServices/CoreServices.h>
 #import <QuickLook/QuickLook.h>
+#import <CHMKit/CHMKit.h>
 
-#import <libxml/HTMLparser.h>
 
-#import "CHMDocument.h"
-#import "CHMContainer.h"
-#import "CHMURLProtocol.h"
+OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thumbnail, CFURLRef url, CFStringRef contentTypeUTI, CFDictionaryRef options, CGSize maxSize);
+void CancelThumbnailGeneration(void* thisInterface, QLThumbnailRequestRef thumbnail);
 
-typedef struct CoverContext {
-	NSData *cover;
-	CHMDocument *doc;
-	CHMContainer *container;
-	NSString* homeDir;
-} CoverContext;
 
-void elementDidStart(CoverContext *context, const xmlChar *name, const xmlChar **atts);
+#define MD_DEBUG 0
 
-static htmlSAXHandler saxHandler = {
-NULL, /* internalSubset */
-NULL, /* isStandalone */
-NULL, /* hasInternalSubset */
-NULL, /* hasExternalSubset */
-NULL, /* resolveEntity */
-NULL, /* getEntity */
-NULL, /* entityDecl */
-NULL, /* notationDecl */
-NULL, /* attributeDecl */
-NULL, /* elementDecl */
-NULL, /* unparsedEntityDecl */
-NULL, /* setDocumentLocator */
-NULL, /* startDocument */
-NULL, /* endDocument */
-(startElementSAXFunc) elementDidStart, /* startElement */
-NULL, /* endElement */
-NULL, /* reference */
-NULL, /* characters */
-NULL, /* ignorableWhitespace */
-NULL, /* processingInstruction */
-NULL, /* comment */
-NULL, /* xmlParserWarning */
-NULL, /* xmlParserError */
-NULL, /* xmlParserError */
-NULL, /* getParameterEntity */
-NULL, /* cdata */
-NULL, /* externalSubset */
-0,
-NULL,
-NULL,
-NULL,
-NULL
-};
+#if MD_DEBUG
+#define MDLog(...) NSLog(__VA_ARGS__)
+#else
+#define MDLog(...)
+#endif
+
+static NSString * const MDCHMQuickLookBundleIdentifier = @"com.markdouma.qlgenerator.CHM";
 
 
 /* -----------------------------------------------------------------------------
@@ -77,63 +43,81 @@ NULL
    This function's job is to create thumbnail for designated file as fast as possible
    ----------------------------------------------------------------------------- */
 
-OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thumbnail, CFURLRef url, CFStringRef contentTypeUTI, CFDictionaryRef options, CGSize maxSize)
-{
-	xmlInitParser();
-	LIBXML_TEST_VERSION;
+OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thumbnail, CFURLRef URL, CFStringRef contentTypeUTI, CFDictionaryRef options, CGSize maxSize) {
 	
-	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-    CHMDocument *doc = [[CHMDocument alloc] init];
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
-	if ([doc readFromFile:[(NSURL *)url path] ofType:nil]) {
-		// Read main page
-		NSData *mainPageData = [doc urlData:[doc currentLocation]];
-		
-		NSString *home = [doc->_container homePath];
-		CoverContext context = { nil, doc, doc->_container,  [home hasSuffix:@"/"] ? home : [home stringByDeletingLastPathComponent]};
-
-		htmlDocPtr homePtr = htmlSAXParseDoc((xmlChar *)[mainPageData bytes], NULL, &saxHandler, &context);
-		xmlFreeDoc(homePtr);	
-		
-		QLThumbnailRequestSetImageWithData(thumbnail, (CFDataRef)context.cover, NULL);
+	MDLog(@"%@; %s(): file == \"%@\"", MDCHMQuickLookBundleIdentifier, __FUNCTION__, [(NSURL *)URL path]);
+	
+	[CHMDocumentFile setAutomaticallyPreparesSearchIndex:NO];
+	
+	NSXMLDocument *htmlDoc = nil;
+	
+	CHMDocumentFile *documentFile = [[CHMDocumentFile alloc] initWithContentsOfFile:[(NSURL *)URL path] error:NULL];
+	
+	if (documentFile == nil) {
+		NSLog(@"%@; %s(): failed to create CHMDocumentFile for item at \"%@\"", MDCHMQuickLookBundleIdentifier, __FUNCTION__, [(NSURL *)URL path]);
+		goto cleanup;
 	}
 	
-	[doc release];	
-	[pool release];
+	if (QLThumbnailRequestIsCancelled(thumbnail)) goto cleanup;
 	
-	xmlCleanupParser();
+	CHMLinkItem *mainPageItem = [documentFile linkItemAtPath:[documentFile homePath]];
+	
+	NSData *mainPageData = mainPageItem.archiveItem.data;
+	
+	if (mainPageData == nil) {
+		NSLog(@"%@; %s(): failed to find home page for file at \"%@\"", MDCHMQuickLookBundleIdentifier, __FUNCTION__, [(NSURL *)URL path]);
+		goto cleanup;
+	}
+	
+	if (QLThumbnailRequestIsCancelled(thumbnail)) goto cleanup;
+	
+	NSError *error = nil;
+	
+	// pass NSXMLDocumentTidyXML | NSXMLDocumentTidyHTML (both) for best results, as they aren't mutually exclusive
+	// NSXMLDocumentTidyXML fixes invalid XML, NSXMLDocumentTidyHTML can make strings easier to read
+	
+	htmlDoc = [[NSXMLDocument alloc] initWithData:mainPageData options:NSXMLDocumentTidyXML | NSXMLDocumentTidyHTML error:&error];
+	if (htmlDoc == nil) {
+		NSLog(@"%@; %s(): failed to create NSXMLDocument for item at \"%@\"; error == %@", MDCHMQuickLookBundleIdentifier, __FUNCTION__, [(NSURL *)URL path], error);
+		goto cleanup;
+	}
+	
+	NSArray *imgElements = [htmlDoc nodesForXPath:@".//img" error:&error];
+	
+	if (imgElements == nil || !imgElements.count) {
+		NSLog(@"%@; %s(): failed to find <img> elements for item at \"%@\"; error == %@", MDCHMQuickLookBundleIdentifier, __FUNCTION__, [(NSURL *)URL path], error);
+		goto cleanup;
+	}
+	
+	if (QLThumbnailRequestIsCancelled(thumbnail)) goto cleanup;
+	
+	NSData *coverImageData = nil;
+	
+	for (NSXMLElement *imgElement in imgElements) {
+		NSXMLNode *srcAttribute = [imgElement attributeForName:@"src"];
+		NSString *path = [srcAttribute stringValue];
+		
+		NSData *imgData = [documentFile archiveItemAtPath:path relativeToArchiveItem:mainPageItem.archiveItem].data;
+		
+		if (imgData.length > coverImageData.length) coverImageData = imgData;
+	}
+	
+	if (coverImageData) {
+		QLThumbnailRequestSetImageWithData(thumbnail, (CFDataRef)coverImageData, NULL);
+	}
+	
+	cleanup : {
+		[htmlDoc release];
+		[documentFile release];
+		[pool release];
+	}
 	
 	return noErr;
 }
 
-void CancelThumbnailGeneration(void* thisInterface, QLThumbnailRequestRef thumbnail)
-{
+void CancelThumbnailGeneration(void* thisInterface, QLThumbnailRequestRef thumbnail) {
     // implement only if supported
 }
 
-void elementDidStart(CoverContext *context, const xmlChar *name, const xmlChar **atts)
-{
-	if (!strcasecmp((char *)name, "img")
-		&& atts != NULL && *atts != NULL) {
-		// search for src
-		while(*atts != NULL) {
-			if (!strcasecmp((char *)*atts, "src")) { 
-				// find src
-				atts ++ ;
-				NSURL *url;
-				NSString *imgPath = [NSString stringWithCString:(char *)*atts];
-				if (**atts == '/') {
-					// absolute path
-					url = [CHMURLProtocol URLWithPath:imgPath inContainer:context->container];
-				} else {
-					// relative path
-					url = [CHMURLProtocol URLWithPath:[context->homeDir stringByAppendingPathComponent:imgPath] inContainer:context->container];
-				}
-				NSData *img = [context->doc urlData:url];
-				if ([img length] > [context->cover length])
-					context->cover = img;			
-			} else
-				atts += 2;
-		}
-	}
-}
